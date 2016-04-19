@@ -235,7 +235,13 @@ mkdir sonar-reports
 
 # Extracting project information needed later
 echo -n 'Extracting Xcode project information'
-buildCmd=(xcodebuild clean build -workspace $workspaceFile -scheme $appScheme)
+buildCmd=(xcodebuild clean build )
+# For workspace 
+if [ "$workspaceFile" != "" ]; then
+    buildCmd+=(-workspace $workspaceFile -scheme $appScheme)
+else # For project file
+    buildCmd+=(-project $projectFile -target $appScheme) 
+fi
 if [[ ! -z "$destinationSimulator" ]]; then
     buildCmd+=(-destination "$destinationSimulator" -destination-timeout 360)
 fi
