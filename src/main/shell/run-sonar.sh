@@ -298,7 +298,7 @@ else
 
 		projectArray=(${projectFile//,/ })
 		firstProject=${projectArray[0]}
-
+        
         slatherCmd=($SLATHER_CMD coverage --input-format profdata $excludedCommandLineFlags --cobertura-xml --output-directory sonar-reports)
 		if [[ ! -z "$workspaceFile" ]]; then
 			slatherCmd+=( --workspace $workspaceFile)
@@ -344,6 +344,19 @@ if [ "$oclint" = "on" ]; then
 	# OCLint
 	echo -n 'Running OCLint...'
 
+	# Build the --exclude flags
+    excludedCommandLineFlagsOCLint=""
+    if [ ! -z "$excludedPathsFromCoverage" -a "$excludedPathsFromCoverage" != " " ]; then
+        echo $excludedPathsFromCoverage | sed -n 1'p' | tr ',' '\n' > tmpFileRunSonarSh2
+        while read word; do
+            excludedCommandLineFlagsOCLint+=" -e $word"
+        done < tmpFileRunSonarSh2
+        rm -rf tmpFileRunSonarSh2
+    fi
+    if [ "$vflag" = "on" ]; then
+        echo "Command line exclusion flags for OCLint is:$excludedCommandLineFlagsOCLint"
+    fi
+        
 	# Options
 	maxPriority=10000
     longLineThreshold=250
@@ -359,7 +372,7 @@ if [ "$oclint" = "on" ]; then
             echo -n "Path included in oclint analysis is:$includedCommandLineFlags"
         fi
 		# Run OCLint with the right set of compiler options
-	    runCommand no oclint-json-compilation-database -v $includedCommandLineFlags -- -rc LONG_LINE=$longLineThreshold -max-priority-1 $maxPriority -max-priority-2 $maxPriority -max-priority-3 $maxPriority -report-type pmd -o sonar-reports/$(echo $word | sed 's/\//_/g')-oclint.xml
+	    runCommand no oclint-json-compilation-database -v $includedCommandLineFlags $excludedCommandLineFlagsOCLint -- -rc LONG_LINE=$longLineThreshold -max-priority-1 $maxPriority -max-priority-2 $maxPriority -max-priority-3 $maxPriority -report-type pmd -o sonar-reports/$(echo $word | sed 's/\//_/g')-oclint.xml
 
 	done < tmpFileRunSonarSh
 	rm -rf tmpFileRunSonarSh
