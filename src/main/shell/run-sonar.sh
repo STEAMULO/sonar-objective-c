@@ -177,6 +177,14 @@ fi
 srcDirs=''; readParameter srcDirs 'sonar.sources'
 # The name of your application scheme in Xcode
 appScheme=''; readParameter appScheme 'sonar.objectivec.appScheme'
+# Read the plist file
+plistFile=''; readParameter plistFile 'sonar.objectivec.plist'
+# Number version from plist
+if [ ! -z "$plistFile" -a "$plistFile" = " " ]; then
+	numVerionFromPlist=''
+else
+	numVerionFromPlist=`defaults read ${PWD}/${plistFile} CFBundleShortVersionString`
+fi
 
 # The name of your test scheme in Xcode
 testScheme=''; readParameter testScheme 'sonar.objectivec.testScheme'
@@ -215,6 +223,8 @@ if [ "$vflag" = "on" ]; then
  	echo "Xcode application scheme is: $appScheme"
  	echo "Xcode test scheme is: $testScheme"
  	echo "Excluded paths from coverage are: $excludedPathsFromCoverage"
+    echo "Plist file is: $plistFile"
+    echo "Number version from plist is: $numVerionFromPlist"
 fi
 
 ## SCRIPT
@@ -444,9 +454,15 @@ else
  	echo 'Skipping Lizard (test purposes only!)'
 fi
 
+if [ ! -z "$numVerionFromPlist" -a "$numVerionFromPlist" != " " ]; then
+		numVersionSonarRunner=" --define sonar.projectVersion=$numVerionFromPlist"
+fi
+if [ "$vflag" = "on" ]; then
+	echo "Command line exclusion flags for SonarQube Runner is:$numVersionSonarRunner"
+fi
 # SonarQube
 echo -n 'Running SonarQube using SonarQube Runner'
-runCommand /dev/stdout sonar-runner
+runCommand /dev/stdout sonar-runner $numVersionSonarRunner
 	
 # Kill progress indicator
 stopProgress
