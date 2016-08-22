@@ -177,14 +177,10 @@ fi
 srcDirs=''; readParameter srcDirs 'sonar.sources'
 # The name of your application scheme in Xcode
 appScheme=''; readParameter appScheme 'sonar.objectivec.appScheme'
-# Read the plist file
-plistFile=''; readParameter plistFile 'sonar.objectivec.plist'
-# Number version from plist
-if [ ! -z "$plistFile" -a "$plistFile" = " " ]; then
-	numVerionFromPlist=''
-else
-	numVerionFromPlist=`defaults read ${PWD}/${plistFile} CFBundleShortVersionString`
-fi
+# Get the path of plist file
+plistFile=`xcodebuild -showBuildSettings -project ${projectFile} | grep -i 'PRODUCT_SETTINGS_PATH' | sed 's/[ ]*PRODUCT_SETTINGS_PATH = //'`
+# Number version from plist if no sonar.projectVersion
+numVerionFromPlist=`defaults read ${plistFile} CFBundleShortVersionString`
 
 # The name of your test scheme in Xcode
 testScheme=''; readParameter testScheme 'sonar.objectivec.testScheme'
@@ -223,7 +219,6 @@ if [ "$vflag" = "on" ]; then
  	echo "Xcode application scheme is: $appScheme"
  	echo "Xcode test scheme is: $testScheme"
  	echo "Excluded paths from coverage are: $excludedPathsFromCoverage"
-    echo "Plist file is: $plistFile"
     echo "Number version from plist is: $numVerionFromPlist"
 fi
 
@@ -454,8 +449,13 @@ else
  	echo 'Skipping Lizard (test purposes only!)'
 fi
 
-if [ ! -z "$numVerionFromPlist" -a "$numVerionFromPlist" != " " ]; then
-		numVersionSonarRunner=" --define sonar.projectVersion=$numVerionFromPlist"
+# The project version from properties file
+numVersionSonarRunner=''; readParameter numVersionSonarRunner 'sonar.projectVersion'
+if [ -z "$numVersionSonarRunner" -o "$numVersionSonarRunner" = " " ]; then
+	numVersionSonarRunner=" --define sonar.projectVersion=$numVerionFromPlist"
+else
+	#if we have version number in properties file, we don't overide numVersion for sonar-runner command
+	numVersionSonarRunner='';
 fi
 if [ "$vflag" = "on" ]; then
 	echo "Command line exclusion flags for SonarQube Runner is:$numVersionSonarRunner"
