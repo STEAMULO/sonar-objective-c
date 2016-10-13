@@ -377,7 +377,15 @@ if [ "$oclint" = "on" ]; then
             echo -n "Path included in oclint analysis is:$includedCommandLineFlags"
         fi
 		# Run OCLint with the right set of compiler options
-	    runCommand no oclint-json-compilation-database -v $includedCommandLineFlags $excludedCommandLineFlagsOCLint -- -rc LONG_LINE=$longLineThreshold -max-priority-1 $maxPriority -max-priority-2 $maxPriority -max-priority-3 $maxPriority -report-type pmd -o sonar-reports/$(echo $word | sed 's/\//_/g')-oclint.xml
+	    runCommand no oclint-json-compilation-database -v $includedCommandLineFlags $excludedCommandLineFlagsOCLint -- -rc LONG_LINE=$longLineThreshold -max-priority-1 $maxPriority -max-priority-2 $maxPriority -max-priority-3 $maxPriority -report-type pmd -o sonar-reports/$(echo $word | sed 's/\//_/g')-oclint.xml \
+-disable-rule=UseObjectSubscripting \
+-disable-rule=UseContainerLiteral \
+-disable-rule=UnnecessaryDefaultStatement \
+-disable-rule=PreferEarlyExit \
+-disable-rule=UseNumberLiteral \
+-disable-rule=MissingHashMethod \
+-disable-rule=MissingDefaultStatement
+#On enlève les nouvelles règles d'OCLint qui ne sont pas connu pour les plugin Obj de SonarQube (sinon on aura une erreur lors de l'envoie des résultats)
 
 	done < tmpFileRunSonarSh
 	rm -rf tmpFileRunSonarSh
