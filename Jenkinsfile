@@ -64,7 +64,7 @@ def installRunnerSonar(List nodeNameList) {
     for (nodeName in nodeNameList) {
         node ("$nodeName") {
             echo ("Installation sur $nodeName")
-            checkout scm
+            git branch: 'develop', url: 'https://github.com/STEAMULO/sonar-objective-c.git'
             def scriptPath = "src/main/shell/run-sonar.sh"
             def osxPath = "/usr/local/bin/"
             sh "cp -f ${scriptPath} ${osxPath}."
