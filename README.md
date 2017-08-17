@@ -50,6 +50,11 @@ Binary packages are available in the release section.
 
 ### Release history
 
+### 0.6.1.1
+- Fix for project with space
+- Fix for coverage when using objc and swift project
+- Evol get automatically project version from project's plist
+
 ### 0.6.1
 - Replaced oclint-xcodebuild by xcpretty (see https://github.com/Backelite/sonar-objective-c/pull/25 thanks to [davidy4ng](https://github.com/davidy4ng)).
 - Added -nounittests and -usesonarscanner parameters to run-sonar.sh script (see https://github.com/Backelite/sonar-objective-c/pull/23 thanks to [davidy4ng](https://github.com/davidy4ng)).
