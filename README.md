@@ -50,6 +50,9 @@ Binary packages are available in the release section.
 
 ### Release history
 
+### 0.6.1.2
+- Change reports path's key for Surefire (for avoid conflicts with Swift Plugin)
+
 ### 0.6.1.1
 - Fix for project with space
 - Fix for coverage when using objc and swift project

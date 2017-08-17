@@ -29,6 +29,7 @@ import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.component.ResourcePerspectives;
 import org.sonar.api.config.Settings;
 import org.sonar.api.resources.Project;
+import org.sonar.plugins.objectivec.ObjectiveCPlugin;
 import org.sonar.plugins.objectivec.core.ObjectiveC;
 
 import java.io.File;
@@ -36,7 +37,7 @@ import java.io.File;
 public class SurefireSensor implements Sensor {
 
     private static final Logger LOG = LoggerFactory.getLogger(SurefireSensor.class);
-    public static final String REPORT_PATH_KEY = "sonar.junit.reportsPath";
+    public static final String REPORT_PATH_KEY = ObjectiveCPlugin.PROPERTY_PREFIX + ".junit.reportsPath";
     public static final String DEFAULT_REPORT_PATH = "sonar-reports/";
 
     private final Settings settings;
