@@ -50,6 +50,9 @@ Binary packages are available in the release section.
 
 ### Release history
 
+### 0.6.1.3
+- Add compatibility for SonarQube 6.5 and above
+
 ### 0.6.1.2
 - Change reports path's key for Surefire (for avoid conflicts with Swift Plugin)
 
